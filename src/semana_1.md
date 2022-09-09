@@ -2,9 +2,9 @@
 
 ## Introdução
 
-Neste segundo artigo, eu tenho a intenção de explorar recursos iniciais de desenvolvimento na .NET.
-A linguagem que estou estudando é C#. Uma linguagem moderna, orientada a objetos e fortemente
-tipada. Durante o estudo e os próximos artigos, mais detalhes sobres essa linguagem serão abordados.
+Neste segundo artigo, minha intenção é explorar os recursos iniciais de desenvolvimento na .NET. A
+linguagem que estou estudando é C#. Uma linguagem moderna, orientada a objetos e fortemente tipada.
+Durante o estudo e os próximos artigos, mais detalhes sobres essa linguagem serão abordados.
 
 Este artigo aborda os seguintes tópicos:
 
@@ -13,10 +13,12 @@ Este artigo aborda os seguintes tópicos:
 - Aplicativo de Console e Entry Point
 - Testes unitários com xUnit e FluentAssertions
 
-No primeiro artigo, abordei alguns conceitos introdutórios sobre a plataforma, seus compnentes e
-funcionamento. Vou considerar que já conhecemos o basicamente o que é e para que serve o .NET e que
-já temos o SDK instalado. Então pularei essa parte. Acredito que a melhor maneira de aprender alguma
-coisa é colocando logo a mão na massa então vamos começar:
+No primeiro artigo, abordei alguns conceitos introdutórios sobre a plataforma, seus componentes e
+funcionamento. Eu recomendo que você o leia para poder compreender alguns pontos que irei abordar
+essa semana. Portanto, vou considerar que já conhecemos basicamente o que é e para que serve o .NET
+e que já temos o SDK instalado. 
+
+////TODO - melhorar essa introdução
 
 ## CLI .NET
 
