@@ -1,0 +1,6 @@
+[book]
+authors = ["Tiago Henrique"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Me tornando um desenvolvedor .NET"
