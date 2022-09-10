@@ -122,17 +122,17 @@ mas lembre-se sempre da opção `--help`.
 ## Iniciando um Aplicativo console
 
 Antes de iniciar um projeto, é importante saber que, ao instalar o SDK do .NET,
-recebemos dezenas de modelos internos para criar projetos e arquivos, incluindo
+recebemos dezenas de modelos internos para criar projetos e arquivos como
 aplicativos de console, bibliotecas de classes, projetos de testes unitários,
-aplicativos ASP.NET Core (incluindo projetos Angular e React), além de arquivos
-de configuração. Para listar esses modelos disponíveis, como vimos acima,
-executamos o comando `dotnet new` com a opção `-l` ou `--list`. É comum iniciar
-os estudos em .NET iniciando um aplicativo de console. Para iniciar, você pode
-executar: `$ dotnet new console`. Contudo, você pode usar a opção `--help` tanto
-após `new` quanto após console para verificar as opções disponíveis para cada.
-Se fizer isso após o comando `new`, verá que existem duas opções (`-n` e `-o`)
-que já direcionam a saída argumento passado para um diretório específico.
-Portanto, se executar:
+aplicativos ASP.NET, ect. Para listar esses modelos disponíveis, como vimos
+acima, executamos o comando `dotnet new` com a opção `-l` ou `--list`.
+
+Como estamos falando sobre aplicações de linha de comando, vamos criar um
+aplicativo de console. Para iniciar, você pode executar: `$ dotnet new console`.
+Contudo, você pode usar a opção `--help` tanto após `new` quanto após console
+para verificar as opções disponíveis para cada. Se fizer isso após o comando
+`new`, verá que existem duas opções (`-n` e `-o`) que já direcionam a saída
+argumento passado para um diretório específico. Portanto, se executar:
 
 ```bash
 $ dotnet new console -o HelloWord
@@ -159,8 +159,140 @@ HelloWord
 
 ```
 
-------> TODO
-Program.cs Esse arquivo representa o ponto de partida do projeto.
+Essa é a estrutura básica e, durante o artigo, veremos o que são esses arquivos.
+Se abrirmos o arquivo `Program.cs`, teremos a instrução clássica _Hello, World_.
+Não é nenhuma novidade que se executarmos esse código a mensagem será impressa
+no console. Para fugir um pouco do padrão, vamos tentar deixar um pouco mais
+empolgante.
+
+A maioria dos programas processa alguma entrada para produzir uma saída;
+basicamente essa é a definição de computação. Um programa obtêm dados de entrada
+de maneiras diversas, mas, com frequência, a entrada vem de uma fonte externa:
+um arquivo, uma conexão de rede, os dados da saída de outro programa ou de um
+usuário em um teclado. Como iniciamos falando de argumentos de linha de comando,
+vamos criar um programa que recebe argumentos e nos exibe o que foi passado;
+algo como o comando `echo` do UNIX.
+
+Você pode criar um novo aplicativo de console com o nome Echo. Dentro do
+diretório criado, abra o arquivo `Program.cs` e remova o código que estiver lá e
+cole este:
+
+```c
+
+namespace Echo;
+
+/// Exibe seus argumentos da linha de comando
+class Program
+{
+    public static void Main()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        string sep = string.Empty;
+        string s = string.Empty;
+
+        for (int i = 1; i < args.Length; i++)
+        {
+            s += sep + args[i];
+            sep = " ";
+        }
+        Console.WriteLine(s);
+    }
+}
+```
+
+Tudo bem se, por acaso, você não conhece a sintaxe do C#, eu também estou
+aprendendo. Mas, o que esse programa faz é montar uma string concatenando
+repetidamente um novo texto ao final. A string `s` _nasce_ vazia, ou seja, igual
+a `""`, e cada passagem pelo loop acrescenta um texto a ela; após a primeira
+iteração, um espaço é inserido (`sep`) de modo que, quando o loop acabar, haverá
+um espaço entre cada argumento. Esses argumentos são obtidos e armazenados em
+uma matriz de `strings` pelo método `GetCommandLineArgs()`, da classe
+`Environment`.
+
+A posição 0 da matriz é o driver (ou o executável) do programa, para não
+exibi-lo, começamos o loop da posição 1, que representa, nesse caso, o primeiro
+argumento passado.
+
+Não ligue para os detalhes da implementação. A ideia aqui é entender o que vai
+acontecer agora: Execute `dotnet build` e note que um novo diretório foi
+adicionado a raiz do projeto: `/bin`.
+
+```bash
+bin
+└── Debug
+    └── net6.0
+        ├── Echo
+        ├── Echo.deps.json
+        ├── Echo.dll
+        ├── Echo.pdb
+        ├── Echo.runtimeconfig.json
+        └── ref
+            └── Echo.dll
+
+```
+
+Este é o produto resultante da compilação. Aqui, temos o diretório `Debug` que
+armazena um conjunto de arquivos binários. Esses binários incluem:
+
+- o código do projeto em IL (Intermediate Language - Vimos um pouco sobre isso
+  no artigo anterior) com extensão `.dll`.
+
+- arquivos de símbolo usados para depuração com uma extensão `.pdb`
+  (entenderemos melhor isso mais para frente).
+
+- um arquivo `.deps.json`, que lista as dependências do aplicativo (ou
+  biblioteca, se fosse o caso).
+
+- um arquivo `.runtimeconfig.json`, que especifica o tempo de execução
+  compartilhado e sua versão em um aplicativo.
+
+- pode conter também outras bibliotecas das quais o projeto depende (por meio de
+  referências de projeto ou referências de pacote do NuGet que ainda veremos).
+
+- por último, temos o executável do programa. Vamos ver esse programa
+  funcionando:
+
+```bash
+# ./bin/Debug
+
+./Echo Olá, mundo!
+
+```
+
+A saída será `Olá, mundo!`. Mas, você não precisa navegar todas as vezes para o
+diretório do executável para executar o codigo-fonte. Ao invés disso, execute
+`dotnet run` e ele irá compilar e executar o programa para você. No caso do
+nosso exemplo, será preciso fornecer os argumentos: `dotnet run Hello, World!`.
+
+Nesse ponto, você deve estar se perguntando: _Ok, agora posso passar o meu
+programa para os meus amigos "echoarem" o que eles passam na linha de comando?_
+Não. Porque o produto não está pronto para ser transferido para outro computador
+para execução. Se você leu o artigo anterior, deve recordar que os executáveis
+não são multiplataforma, mas específicos do sistema operacional em que foram
+desenvolvidos. Isto significa que o executável Echo criado aqui na minha máquina
+não rodará em um SO ou arquitetura de CPU diferente. Para criar uma versão do
+aplicativo que pode ser distribuída (implantada), você precisa publicá-lo (por
+exemplo, com o comando `dotnet publish`).
+
+Antes de estudarmos o comando `publish` e ver como podemos tornar esse programa
+multiplataforma, precisamos refletir sobre a existência dos diretórios `obj` e
+`bin`. Por que precisamos delas para o processo de compilação?
+
+Bom, creio que você já deve ter ouvido a expressão "vamos compilar e ver no que
+dá", ou alguém já perguntou: "o seu código está compilando?". O uso coloquial da
+palavra pode gerar certa confusão para programadores mais novos (experiência
+própria). Compilar não necessariamente o mesmo que criar um arquivo executável.
+Em vez disso é um processo de várias estágios divididos em dois componentes:
+**compilação** e **linking**. 
+
+**Compilação**
+Compilação se refere ao processamento do código-fonte e a criação de um arquivo
+"objeto". Ele cria um executável? Sim. Mas o compilador apenas produz aquilo
+para sua arquitetura de CPU. Inclusive, você pode ter vários arquivos compilados
+
+
+
+------> TODO Program.cs Esse arquivo representa o ponto de partida do projeto.
 HelloWorld.csproj O arquivo com extensão .csproj representa a base para
 configuração do projeto. Ele interpreta todas as dependências do projeto, além
 de informações de configuração como requisitos da plataforma, controle de
