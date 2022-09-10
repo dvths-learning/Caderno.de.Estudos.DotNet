@@ -8,14 +8,14 @@ linguagem moderna, orientada a objetos e fortemente tipada. Durante o estudo (e
 nos próximos artigos), mais detalhes sobres essa linguagem serão abordados.
 
 [No artigo anterior](https://dev.to/dvths/me-tornando-um-desenvolvedor-net-0-1n15),
-abordei alguns conceitos introdutórios sobre a plataforma; seus componentes e
+abordei alguns conceitos introdutórios sobre a plataforma, seus componentes e
 funcionamento. Eu recomendo que você o leia para poder compreender alguns pontos
-que irei abordar essa semana. Vou considerar que já conhecemos basicamente o que
-é e para que serve o .NET e que já temos o SDK (Software Development Kit)
+que irei abordar mais para frente. Vou considerar que já conhecemos basicamente
+o que é e para que serve o .NET, e que já temos o SDK (Software Development Kit)
 instalado (porque hoje tem código).
 
-Meu ambiente de desenvolvimento é Linux, a distribuição é Arch Linux. É
-importante destacar isso por duas razões: Primeiro porque o IDE (Itegrated
+Meu ambiente de desenvolvimento é Linux, a distribuição é Arch Linux. Isso é
+importante destacar por duas razões: Primeiro porque o IDE (Itegrated
 Development Environment) Visual Studio, indicado para desenvolvimento .NET, não
 tem suporte para Linux. Apesar de uma IDE possuir diversos recursos que
 facilitam o desenvolvimento, atualmente o Visual Studio Code dá conta do recado
@@ -24,25 +24,25 @@ nesse momento de aprendizado. Particularmente, eu uso Neovim 0.7 com
 configurado.
 
 Segundo: eu começarei estudando a CLI (Command Line Interface) do dotnet, algo
-que um usuário do IDE usará poucas vezes no dia a dia. Portanto, parte desse
-conteúdo pode não ser tão relevante para esses usuários.
+que um usuário do IDE usará poucas vezes no dia a dia. Portanto, alguns desses
+usuários pode considerar irrelevante parte desse conteúdo.
 
-No fim do artigo, você terá percebido que as linhas de comando são bem longas.
-Eu acho esse fator um pouco desconfortável. Por isso escrevi um script em bash
-que auxilia na criação de projetos sem que fiquemos digitando muito no terminal.
-O script e suas instruções de uso estão neste
+No fim do artigo, você terá percebido que alguns comandos podem ser bem longos e
+repetitivos. Eu acho isso um pouco desconfortável. Por isso, escrevi um script
+em bash que auxilia na criação de projetos sem que fiquemos digitando muito no
+terminal. O script e suas instruções de uso estão neste
 [repo](https://github.com/dvths/cs-dotnet). Nessa primeira versão, ele apenas
 ajuda na criação de um aplicativo de console com testes unitários e uma
 estrutura para construção de uma APIWeb seguindo os padrões SOLID/DDD (veremos
-mais sobre esses termos no futuro). Conforme a necessidade irei atualizando. 
+mais sobre esses termos no futuro). Conforme a necessidade irei atualizando.
 
 Por fim, este artigo aborda os seguintes tópicos:
 
 - Visão geral da CLI (Command Line Interface) .NET
+- Aplicativos de Console e Entry Point
 - Estrutura de comandos
 - Gerenciamento de pacotes
 - Referencia entre projetos
-- Aplicativos de Console e Entry Point
 - Testes unitários com xUnit e FluentAssertions
 
 ---
@@ -50,57 +50,61 @@ Por fim, este artigo aborda os seguintes tópicos:
 ## CLI .NET -- Visão Geral
 
 A Interface de Linha de Comando do .NET é uma ferramenta multiplataforma para
-desenvolvimento, criação, execução e publicação de aplicações .NET.
+desenvolvimento, criação, execução e publicação de aplicações .NET e vem como
+parte do conjunto de recursos do SDK.
 
-**Estrutura de Comando**
+Como a maioria das CLIs, a do .NET consiste no driver -- um arquivo executável
+-- opções e argumentos de comando. O driver (dotnet) tem basicamente duas
+responsabilidades: a) executar um aplicativo e b) fornece uma série de comandos
+para trabalhar com projetos .NET.
 
-Como a maioria das CLIs, a do .NET consiste no driver -- um arquivo
-executável que vem como parte dos recursos do SDK --, opções e argumentos de
-comando. O driver (dotnet) tem basicamente duas responsabilidades: a) executar
-um aplicativo ou executar um comando.
-
-### Executando um aplicativo dependente da estrutura
-
-```bash
-$ dotnet /path/to/my_app.dll
-```
-
-Se estiver no diretório do aplicativo basta apenas executar:
+## Estrutura de comando
 
 ```bash
- $ dotnet my_app.dll
+$ dotnet <COMANDO> [opções-do-comando] [argumentos]
 ```
 
 Quando passamos um comando para o executável (dotnet) inicia-se a execução
-daquele comando:
+daquele comando, por exemplo:
 
 ```bash
  $ dotnet build
 ```
 
-Primeiro, o driver determina a versão do SDK a ser usada e, se não houver nenhum
-arquivo global.JSON (que é um arquivo que permite definir qual versão do SDK
-pode ser usada), ele usará a versão disponível no momento. Por último, após essa
-determinação, o driver executa o comando.
+Esse comando compila um projeto e suas dependências no diretório de trabalho.
+
+```bash
+$ dotnet new --list
+```
+
+Listas uma séries de opções de modelos pré preparados que você pode criar.
+
+Cada comando define suas próprias opções e argumentos e também possuem uma opção
+`--help` muito útil quando se sentir perdido.
+
+Por tanto temos:
 
 **Comando:**
 
-O comando executa uma ação. Por exemplo, dotnet build compila o código. dotnet
-publish, publica o código.
+Executa uma ação, compila o código ou publica o código (veremos mais para
+frente).
 
 **Argumentos:**
 
 Argumentos que você passa na linha de comando são aqueles do comando invocado.
-Por exemplo, quando você executa dotnet publish my_app.csproj, o argumento
-my_app.csproj indica que o projeto a ser publicado é passado para o comando
+Por exemplo, quando você executa `dotnet publish my_app.csproj`, o argumento
+`my_app.csproj` indica que o projeto a ser publicado é passado para o comando
 publish.
 
 **Opções:**
 
-As opções são aquelas do comando invocado. Por exemplo: dotnet publish --output
-/build_output, é a opção que indica o caminho da saída do aplicativo a ser
-publicado e esse valor é passado para o comando publish . É importante ter em
-mente os comandos do CLI .NET que se dividem nas seguintes categorias:
+As opções são aquelas do comando invocado. Por exemplo: `dotnet publish --output
+/build_output``, é a opção que indica o caminho da saída do aplicativo a ser
+publicado e esse valor é passado para o comando publish .
+
+É importante ter em mente, principalmente se você não está habituado a usar a
+linha de comando, que os comandos do CLI .NET se dividem nas seguintes
+categorias:
 
 **Gerenciar dependências:** abrange instalação, remoção, limpeza após a
 instalação de pacotes e atualização dos pacotes.
@@ -109,41 +113,53 @@ instalação de pacotes e atualização dos pacotes.
 testes, compilação do código e comandos de migração para atualizar projetos.
 
 **Criar e publicar pacotes:** abrange tarefas como criar um pacote compactado e
-efetuar um push do pacote para um registro, por exemplo. Uma lista dos comandos
-padrão do CLI .NET e seus detalhamentos pode ser consultada [aqui]().
+efetuar um push do pacote para um registro, por exemplo.
 
-CLI do .NET Iniciando um projeto .NET Antes de iniciar um projeto, é importante
-saber que, ao instalar o SDK do .NET, recebemos dezenas de modelos internos para
-criar projetos e arquivos, incluindo aplicativos de console, bibliotecas de
-classes, projetos de testes unitários, aplicativos ASP.NET Core (incluindo
-projetos Angular e React), além de arquivos de configuração. Para listar esses
-modelos disponíveis, executamos o comando dotnet new com a opção -l ou --list .
-Mais detalhes de cada um desses modelos podem ser acessados aqui: Modelos padrão
-do .NET para dotnet new - .NET CLI Hello, World É comum iniciar os estudos em
-.NET iniciando um aplicativo de console (terminal). Para iniciar, você pode
-executar: $ dotnet new console
+Uma lista dos comandos do CLI .NET e seus detalhes pode ser consultada
+[aqui](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet?source=recommendations#dotnet-commands),
+mas lembre-se sempre da opção `--help`.
 
-Esse comando cria um projeto .NET com base no modelo pré-configurado para uma
-aplicação desse tipo. Você pode usar a opção --help tanto após new quanto após
-console para verificar as opções disponíveis para cada. Se fizer isso, verá que
-existe uma opção que já direciona a saída desse comando para um diretório
-específico: -o Portanto, se executar: $ dotnet new console -o MyAwesomeApp
+## Iniciando um Aplicativo console
 
-Verá que um diretório será criado com o valor passado para opção -o , no exemplo
-MyAwesomeApp. Crie um projeto console chamado HelloWorld e dê uma espiada no que
-existe dentro dele: $ dotnet new console -o HelloWorld O modelo "Aplicativo do
-Console" foi criado com êxito.
+Antes de iniciar um projeto, é importante saber que, ao instalar o SDK do .NET,
+recebemos dezenas de modelos internos para criar projetos e arquivos, incluindo
+aplicativos de console, bibliotecas de classes, projetos de testes unitários,
+aplicativos ASP.NET Core (incluindo projetos Angular e React), além de arquivos
+de configuração. Para listar esses modelos disponíveis, como vimos acima,
+executamos o comando `dotnet new` com a opção `-l` ou `--list`. É comum iniciar
+os estudos em .NET iniciando um aplicativo de console. Para iniciar, você pode
+executar: `$ dotnet new console`. Contudo, você pode usar a opção `--help` tanto
+após `new` quanto após console para verificar as opções disponíveis para cada.
+Se fizer isso após o comando `new`, verá que existem duas opções (`-n` e `-o`)
+que já direcionam a saída argumento passado para um diretório específico.
+Portanto, se executar:
 
-Processando ações pós-criação... Executando 'dotnet restore' em
-/home/tiago/HelloWord/HelloWord.csproj... Determining projects to restore...
-Restored /home/tiago/HelloWord/HelloWord.csproj (in 263 ms). A restauração foi
-bem-sucedida.
+```bash
+$ dotnet new console -o HelloWord
+```
 
-$ tree HelloWorld HelloWord ├── HelloWorld.csproj ├── obj │ ├──
-HelloWorld.csproj.nuget.dgspec.json │ ├── HelloWorld.csproj.nuget.g.props │ ├──
-HelloWorld.csproj.nuget.g.targets │ ├── project.assets.json │ └──
-project.nuget.cache └── Program.cs
+Verá que um diretório será criado com o valor passado para opção `-o` , no caso,
+`HelloWord`. Crie um projeto console chamado HelloWorld e dê uma espiada no que
+existe dentro dele:
 
+```shell
+
+$ tree HelloWord
+HelloWord
+├── HelloWord.csproj
+├── obj
+│   ├── HelloWord.csproj.nuget.dgspec.json
+│   ├── HelloWord.csproj.nuget.g.props
+│   ├── HelloWord.csproj.nuget.g.targets
+│   ├── project.assets.json
+│   └── project.nuget.cache
+└── Program.cs
+
+1 directory, 7 files
+
+```
+
+------> TODO
 Program.cs Esse arquivo representa o ponto de partida do projeto.
 HelloWorld.csproj O arquivo com extensão .csproj representa a base para
 configuração do projeto. Ele interpreta todas as dependências do projeto, além
