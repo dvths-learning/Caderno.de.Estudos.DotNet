@@ -25,7 +25,7 @@ configurado.
 
 Segundo: eu começarei estudando a CLI (Command Line Interface) do dotnet, algo
 que um usuário do IDE usará poucas vezes no dia a dia. Portanto, alguns desses
-usuários pode considerar irrelevante parte desse conteúdo.
+usuários podem considerar irrelevante parte desse conteúdo.
 
 No fim do artigo, você terá percebido que alguns comandos podem ser bem longos e
 repetitivos. Eu acho isso um pouco desconfortável. Por isso, escrevi um script
@@ -77,17 +77,17 @@ Esse comando compila um projeto e suas dependências no diretório de trabalho.
 $ dotnet new --list
 ```
 
-Listas uma séries de opções de modelos pré preparados que você pode criar.
+Lista uma séries de opções de modelos pré preparados que você pode criar.
 
 Cada comando define suas próprias opções e argumentos e também possuem uma opção
 `--help` muito útil quando se sentir perdido.
 
-Por tanto temos:
+Portanto, temos:
 
 **Comando:**
 
-Executa uma ação, compila o código ou publica o código (veremos mais para
-frente).
+Executa uma ação, compila o código, adiciona pacotes, referências ou publica o
+código (veremos mais para frente).
 
 **Argumentos:**
 
@@ -98,9 +98,9 @@ publish.
 
 **Opções:**
 
-As opções são aquelas do comando invocado. Por exemplo: `dotnet publish --output
-/build_output``, é a opção que indica o caminho da saída do aplicativo a ser
-publicado e esse valor é passado para o comando publish .
+As opções são aquelas do comando invocado. Por exemplo:
+`dotnet publish --output /build_output`, é a opção que indica o caminho da saída
+do aplicativo a ser publicado e esse valor é passado para o comando publish .
 
 É importante ter em mente, principalmente se você não está habituado a usar a
 linha de comando, que os comandos do CLI .NET se dividem nas seguintes
@@ -159,11 +159,11 @@ HelloWord
 
 ```
 
-Essa é a estrutura básica e, durante o artigo, veremos o que são esses arquivos.
-Se abrirmos o arquivo `Program.cs`, teremos a instrução clássica _Hello, World_.
-Não é nenhuma novidade que se executarmos esse código a mensagem será impressa
-no console. Para fugir um pouco do padrão, vamos tentar deixar um pouco mais
-empolgante.
+Essa é a estrutura básica e, durante o artigo, veremos o que são todos esses
+arquivos. Se abrirmos o arquivo `Program.cs`, teremos a instrução clássica
+_Hello, World_. Não é nenhuma novidade que, se executarmos esse código, a
+mensagem será impressa no console. Para fugir um pouco do padrão, vamos
+implementar algo um pouquinho mais empolgante.
 
 A maioria dos programas processa alguma entrada para produzir uma saída;
 basicamente essa é a definição de computação. Um programa obtêm dados de entrada
@@ -209,9 +209,8 @@ um espaço entre cada argumento. Esses argumentos são obtidos e armazenados em
 uma matriz de `strings` pelo método `GetCommandLineArgs()`, da classe
 `Environment`.
 
-A posição 0 da matriz é o driver (ou o executável) do programa, para não
-exibi-lo, começamos o loop da posição 1, que representa, nesse caso, o primeiro
-argumento passado.
+A posição 0 da matriz é o executável do programa, para não exibi-lo, começamos o
+loop da posição 1, que representa o primeiro argumento passado.
 
 Não ligue para os detalhes da implementação. A ideia aqui é entender o que vai
 acontecer agora: Execute `dotnet build` e note que um novo diretório foi
@@ -231,14 +230,15 @@ bin
 
 ```
 
-Este é o produto resultante da compilação. Aqui, temos o diretório `Debug` que
-armazena um conjunto de arquivos binários. Esses binários incluem:
+Este é o produto resultante da compilação ou Assemblies. Aqui, temos o diretório
+`Debug` que armazena um conjunto de arquivos binários de saída do programa.
+Esses binários incluem:
 
-- o código do projeto em IL (Intermediate Language - Vimos um pouco sobre isso
-  no artigo anterior) com extensão `.dll`.
+- o código do projeto em IL (Intermediate Language) -- vimos um pouco sobre isso
+  no artigo anterior -- com extensão `.dll` (ou `exe`).
 
-- arquivos de símbolo usados para depuração com uma extensão `.pdb`
-  (entenderemos melhor isso mais para frente).
+- arquivos de símbolo de depuração, com uma extensão `.pdb` (entenderemos melhor
+  isso mais para frente).
 
 - um arquivo `.deps.json`, que lista as dependências do aplicativo (ou
   biblioteca, se fosse o caso).
@@ -249,8 +249,9 @@ armazena um conjunto de arquivos binários. Esses binários incluem:
 - pode conter também outras bibliotecas das quais o projeto depende (por meio de
   referências de projeto ou referências de pacote do NuGet que ainda veremos).
 
-- por último, temos o executável do programa. Vamos ver esse programa
-  funcionando:
+- por último, o binário executável do programa.
+
+Vamos ver esse programa funcionando:
 
 ```bash
 # ./bin/Debug
@@ -260,37 +261,70 @@ armazena um conjunto de arquivos binários. Esses binários incluem:
 ```
 
 A saída será `Olá, mundo!`. Mas, você não precisa navegar todas as vezes para o
-diretório do executável para executar o codigo-fonte. Ao invés disso, execute
+diretório do binário para executar o codigo-fonte. Ao invés disso, execute
 `dotnet run` e ele irá compilar e executar o programa para você. No caso do
-nosso exemplo, será preciso fornecer os argumentos: `dotnet run Hello, World!`.
+nosso exemplo, será preciso fornecer os argumentos: `dotnet run Olá, mundo!`.
 
-Nesse ponto, você deve estar se perguntando: _Ok, agora posso passar o meu
-programa para os meus amigos "echoarem" o que eles passam na linha de comando?_
-Não. Porque o produto não está pronto para ser transferido para outro computador
-para execução. Se você leu o artigo anterior, deve recordar que os executáveis
-não são multiplataforma, mas específicos do sistema operacional em que foram
-desenvolvidos. Isto significa que o executável Echo criado aqui na minha máquina
-não rodará em um SO ou arquitetura de CPU diferente. Para criar uma versão do
-aplicativo que pode ser distribuída (implantada), você precisa publicá-lo (por
-exemplo, com o comando `dotnet publish`).
+Nesse ponto, você deve estar se perguntado sobre o diretório `obj`. Se você
+reparou, um diretório `Debug` também foi gerado lá e, entre outras coisas,
+também se encontram os assemblies de saída do programa. Se não reparou, repare e
+a sua próxima pergunta então será: Por que dois diretórios para a mesma coisa? E
+é aí que está: Não são necessariamente a mesma coisa. As dois diretórios
+armazenam o código em IL, mas seus propósitos de vida são distintos. E para
+deixar isso mais claro, precisamos entender o processo de compilação.
+
+Acontece que o uso coloquial da palavra "compilação" pode gerar certa confusão,
+pelo menos para mim que sou meio lento. Compilar não necessariamente é o mesmo
+que apenas gerar um arquivo executável. Em vez disso é um processo de várias
+estágios que, de maneira geral pode ser dividido em dois componentes:
+**compilação** e **linking**.
+
+![Compilação e Linker](./img/Compilador_Linker.jpg)
+
+**Compilação** se refere ao processamento do código-fonte e a criação de um
+arquivo "_objeto_" (por isso o diretório se chama "obj"), que são unidades
+compiladas individuais. Por exemplo, se você compilar (mas não vincular) três
+arquivos separados, você terá três arquivos objeto criados como saída, cada um
+com o nome `filename.dll`, por exemplo. Cada um desses arquivos contém uma
+tradução do seu código-fonte em IL -- mas você ainda não pode executá-los!
+Porque ainda é preciso transformá-los em executáveis que seu sistema operacional
+possa usar. É aí que entra o linking.
+
+Linking (vinculação) refere-se à criação de um único arquivo executável a partir
+de vários arquivos objeto. Isso significa que todos esses arquivos de código
+compilados são vinculados e compilados em uma unidade assembly que pode ser uma
+DLL ou EXE.
+
+Com isso em mente, pense no seguinte: se não houvessem etapas separadas,
+compilação e vinculação, caso seu programa possuísse diversos arquivos, a
+alteração de um exigiria a compilação (ou recompilação, no caso) de todos os
+outros. Com a compilação de duas fases, com unidades compiladas isoladas no
+diretório `/obj`, podemos ter mais controle sobres quais arquivos exatamente
+foram alterados, compilá-los separadamente e depois vinculá-los no processo de
+build. Inclusive isso tem um nome e se chama **compilação condicional**.
+
+
+---------------------> TODO
+
+Mas o compilador apenas produz aquilo para sua arquitetura de CPU. Inclusive,
+você pode ter vários arquivos compilados
+
+_Ok, agora posso passar o meu programa para os meus amigos "echoarem" o que eles
+passam na linha de comando?_ Não. Porque o produto não está pronto para ser
+transferido para outro computador para execução. Se você leu o artigo anterior,
+deve recordar que os executáveis não são multiplataforma, mas específicos do
+sistema operacional em que foram desenvolvidos. Isto significa que o executável
+`Echo` criado aqui na minha máquina não rodará em um SO ou arquitetura de CPU
+diferente. Para criar uma versão do aplicativo que pode ser distribuída
+(implantada), você precisa publicá-lo (por exemplo, com o comando
+`dotnet publish`).
 
 Antes de estudarmos o comando `publish` e ver como podemos tornar esse programa
 multiplataforma, precisamos refletir sobre a existência dos diretórios `obj` e
 `bin`. Por que precisamos delas para o processo de compilação?
 
 Bom, creio que você já deve ter ouvido a expressão "vamos compilar e ver no que
-dá", ou alguém já perguntou: "o seu código está compilando?". O uso coloquial da
-palavra pode gerar certa confusão para programadores mais novos (experiência
-própria). Compilar não necessariamente o mesmo que criar um arquivo executável.
-Em vez disso é um processo de várias estágios divididos em dois componentes:
-**compilação** e **linking**. 
-
-**Compilação**
-Compilação se refere ao processamento do código-fonte e a criação de um arquivo
-"objeto". Ele cria um executável? Sim. Mas o compilador apenas produz aquilo
-para sua arquitetura de CPU. Inclusive, você pode ter vários arquivos compilados
-
-
+dá", ou alguém já perguntou: "o seu código está compilando?". **Compilação**
 
 ------> TODO Program.cs Esse arquivo representa o ponto de partida do projeto.
 HelloWorld.csproj O arquivo com extensão .csproj representa a base para
