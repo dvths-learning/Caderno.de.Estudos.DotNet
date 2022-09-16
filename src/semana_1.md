@@ -2,45 +2,47 @@
 
 ## Introdução
 
-Neste segundo artigo, minha intenção é iniciar uma exploração dos recursos
-iniciais de desenvolvimento .NET. A linguagem que estou estudando é C#. Uma
-linguagem moderna, orientada a objetos e fortemente tipada. Durante o estudo (e
-nos próximos artigos), mais detalhes sobres essa linguagem serão abordados.
+Neste segundo artigo, minha intenção é explorar os recursos iniciais de
+desenvolvimento .NET. A linguagem que estou estudando é C#. Uma linguagem
+moderna, orientada a objetos e fortemente tipada. Durante o estudo (e nos
+próximos artigos), mais detalhes sobres essa linguagem serão abordados.
 
 [No artigo anterior](https://dev.to/dvths/me-tornando-um-desenvolvedor-net-0-1n15),
 abordei alguns conceitos introdutórios sobre a plataforma, seus componentes e
-funcionamento. Eu recomendo que você o leia para poder compreender alguns pontos
-que irei abordar mais para frente. Vou considerar que já conhecemos basicamente
-o que é e para que serve o .NET, e que já temos o SDK (Software Development Kit)
-instalado (porque hoje tem código).
+funcionamento. Eu recomendo que você o leia para poder compreender melhor, se
+for o caso, alguns pontos que irei abordar mais para frente. Vou considerar que
+já conhecemos basicamente o que é e para que serve o .NET, e que já temos o SDK
+(Software Development Kit) instalado (porque hoje tem código).
 
-Meu ambiente de desenvolvimento é Linux, a distribuição é Arch Linux. Isso é
-importante destacar por duas razões: Primeiro porque o IDE (Itegrated
-Development Environment) Visual Studio, indicado para desenvolvimento .NET, não
-tem suporte para Linux. Apesar de uma IDE possuir diversos recursos que
-facilitam o desenvolvimento, atualmente o Visual Studio Code dá conta do recado
-nesse momento de aprendizado. Particularmente, eu uso Neovim 0.7 com
+Eu estou estudando em um Arch Linux. Isso é importante destacar por duas razões:
+Primeiro porque o IDE (Itegrated Development Environment) Visual Studio,
+indicado para desenvolvimento .NET, não tem suporte para Linux. Apesar de uma
+IDE possuir diversos recursos que facilitam o desenvolvimento, o Visual Studio
+Code dá conta do recado neste momento de aprendizado. Particularmente, eu uso
+Neovim 0.7 com
 [Language Server Protocol](https://docs.microsoft.com/en-us/visualstudio/extensibility/language-server-protocol?view=vs-2022)
 configurado.
 
 Segundo: eu começarei estudando a CLI (Command Line Interface) do dotnet, algo
-que um usuário do IDE usará poucas vezes no dia a dia. Portanto, alguns desses
-usuários podem considerar irrelevante parte desse conteúdo.
+que um usuário do IDE usará poucas vezes no dia a dia. Portanto, alguns podem
+considerar irrelevante parte desse conteúdo.
 
 No fim do artigo, você terá percebido que alguns comandos podem ser bem longos e
 repetitivos. Eu acho isso um pouco desconfortável. Por isso, escrevi um script
-em bash que auxilia na criação de projetos sem que fiquemos digitando muito no
-terminal. O script e suas instruções de uso estão neste
+em bash que auxilia na criação de projetos sem que fiquemos digitando linhas
+muito longas no terminal. O script e suas instruções de uso estão neste
 [repo](https://github.com/dvths/cs-dotnet). Nessa primeira versão, ele apenas
-ajuda na criação de um aplicativo de console com testes unitários e uma
-estrutura para construção de uma APIWeb seguindo os padrões SOLID/DDD (veremos
-mais sobre esses termos no futuro). Conforme a necessidade irei atualizando.
+ajuda na criação de um aplicativo de console com um diretório de testes
+unitários, e na criação de uma estrutura para construção de uma APIWeb seguindo
+os padrões SOLID/DDD (veremos mais sobre esses termos no futuro). Conforme a
+necessidade irei incrementando o script para torná-lo mais útil.
 
-Por fim, este artigo aborda os seguintes tópicos:
+Por fim, abordarei um pouco dos seguintes assuntos:
 
 - Visão geral da CLI (Command Line Interface) .NET
-- Aplicativos de Console e Entry Point
 - Estrutura de comandos
+- Compilação condicional
+- Aplicativos de Console e Entry Point
 - Gerenciamento de pacotes
 - Referencia entre projetos
 - Testes unitários com xUnit e FluentAssertions
@@ -71,7 +73,7 @@ daquele comando, por exemplo:
  $ dotnet build
 ```
 
-Esse comando compila um projeto e suas dependências no diretório de trabalho.
+Esse comando compila um projeto e suas dependências.
 
 ```bash
 $ dotnet new --list
@@ -100,20 +102,21 @@ publish.
 
 As opções são aquelas do comando invocado. Por exemplo:
 `dotnet publish --output /build_output`, é a opção que indica o caminho da saída
-do aplicativo a ser publicado e esse valor é passado para o comando publish .
+do aplicativo a ser publicado e esse valor é passado para o comando publish.
 
 É importante ter em mente, principalmente se você não está habituado a usar a
 linha de comando, que os comandos do CLI .NET se dividem nas seguintes
 categorias:
 
-**Gerenciar dependências:** abrange instalação, remoção, limpeza após a
-instalação de pacotes e atualização dos pacotes.
-
 **Executar programas:** abrange o fluxo de desenvolvimento, isto é, execução de
 testes, compilação do código e comandos de migração para atualizar projetos.
 
+**Gerenciar dependências:** abrange instalação, remoção, limpeza após a
+instalação de pacotes e atualização dos pacotes.
+
 **Criar e publicar pacotes:** abrange tarefas como criar um pacote compactado e
-efetuar um push do pacote para um registro, por exemplo.
+efetuar um push do pacote para um registro, por exemplo (aos poucos veremos cada
+uma dessas coisas).
 
 Uma lista dos comandos do CLI .NET e seus detalhes pode ser consultada
 [aqui](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet?source=recommendations#dotnet-commands),
@@ -122,25 +125,27 @@ mas lembre-se sempre da opção `--help`.
 ## Iniciando um Aplicativo console
 
 Antes de iniciar um projeto, é importante saber que, ao instalar o SDK do .NET,
-recebemos dezenas de modelos internos para criar projetos e arquivos como
-aplicativos de console, bibliotecas de classes, projetos de testes unitários,
-aplicativos ASP.NET, ect. Para listar esses modelos disponíveis, como vimos
-acima, executamos o comando `dotnet new` com a opção `-l` ou `--list`.
+recebemos dezenas de modelos pré preparados como aplicativos de console,
+bibliotecas de classes, projetos de testes unitários, aplicativos ASP.NET, ect.
+Para listar esses modelos disponíveis, como vimos acima, executamos o comando
+`dotnet new` com a opção `-l` ou `--list`.
 
 Como estamos falando sobre aplicações de linha de comando, vamos criar um
 aplicativo de console. Para iniciar, você pode executar: `$ dotnet new console`.
 Contudo, você pode usar a opção `--help` tanto após `new` quanto após console
 para verificar as opções disponíveis para cada. Se fizer isso após o comando
 `new`, verá que existem duas opções (`-n` e `-o`) que já direcionam a saída
-argumento passado para um diretório específico. Portanto, se executar:
+argumento passado para um diretório específico (eu não consegui ver uma
+diferença prática entre essas opções apesar de estarem listados de forma
+distinta). Portanto, se executar:
 
 ```bash
 $ dotnet new console -o HelloWord
 ```
 
 Verá que um diretório será criado com o valor passado para opção `-o` , no caso,
-`HelloWord`. Crie um projeto console chamado HelloWorld e dê uma espiada no que
-existe dentro dele:
+`HelloWord`. O mesmo o corre com a opção `n`. Crie um projeto console chamado
+HelloWorld e dê uma espiada no que existe dentro dele:
 
 ```shell
 
@@ -162,8 +167,8 @@ HelloWord
 Essa é a estrutura básica e, durante o artigo, veremos o que são todos esses
 arquivos. Se abrirmos o arquivo `Program.cs`, teremos a instrução clássica
 _Hello, World_. Não é nenhuma novidade que, se executarmos esse código, a
-mensagem será impressa no console. Para fugir um pouco do padrão, vamos
-implementar algo um pouquinho mais empolgante.
+mensagem será impressa no console. Para fugir um pouco desse padrão, vamos
+começar tentando algo diferente.
 
 A maioria dos programas processa alguma entrada para produzir uma saída;
 basicamente essa é a definição de computação. Um programa obtêm dados de entrada
@@ -209,11 +214,13 @@ um espaço entre cada argumento. Esses argumentos são obtidos e armazenados em
 uma matriz de `strings` pelo método `GetCommandLineArgs()`, da classe
 `Environment`.
 
-A posição 0 da matriz é o executável do programa, para não exibi-lo, começamos o
-loop da posição 1, que representa o primeiro argumento passado.
+Se você, por acaso, notou que o loop começou em 1 e não em 0, a resposta é que o
+primeiro elemento será o caminho para o executável do seu programa. Para não
+exibi-lo, começamos o loop da posição 1, o segundo elemento, que representa o
+primeiro argumento passado para o nosso comando Echo.
 
-Não ligue para os detalhes da implementação. A ideia aqui é entender o que vai
-acontecer agora: Execute `dotnet build` e note que um novo diretório foi
+Mas não ligue para os detalhes da implementação. A ideia aqui é entender o que
+vai acontecer agora: Execute `dotnet build` e note que um novo diretório foi
 adicionado a raiz do projeto: `/bin`.
 
 ```bash
@@ -230,9 +237,9 @@ bin
 
 ```
 
-Este é o produto resultante da compilação ou Assemblies. Aqui, temos o diretório
-`Debug` que armazena um conjunto de arquivos binários de saída do programa.
-Esses binários incluem:
+Este é o produto resultante da compilação ou os Assemblies. Aqui, temos o
+diretório `Debug` que armazena um conjunto de arquivos binários de saída do
+programa. Esses binários incluem:
 
 - o código do projeto em IL (Intermediate Language) -- vimos um pouco sobre isso
   no artigo anterior -- com extensão `.dll` (ou `exe`).
@@ -268,8 +275,8 @@ nosso exemplo, será preciso fornecer os argumentos: `dotnet run Olá, mundo!`.
 Nesse ponto, você deve estar se perguntado sobre o diretório `obj`. Se você
 reparou, um diretório `Debug` também foi gerado lá e, entre outras coisas,
 também se encontram os assemblies de saída do programa. Se não reparou, repare e
-a sua próxima pergunta então será: Por que dois diretórios para a mesma coisa? E
-é aí que está: Não são necessariamente a mesma coisa. As dois diretórios
+a sua próxima pergunta, então, será: Por que dois diretórios para a mesma coisa?
+E é aí que está: Não são necessariamente a mesma coisa. As dois diretórios
 armazenam o código em IL, mas seus propósitos de vida são distintos. E para
 deixar isso mais claro, precisamos entender o processo de compilação.
 
@@ -303,8 +310,8 @@ diretório `/obj`, podemos ter mais controle sobres quais arquivos exatamente
 foram alterados, compilá-los separadamente e depois vinculá-los no processo de
 build. Inclusive isso tem um nome e se chama **compilação condicional**.
 
-
----------------------> TODO
+Saber disso importa, pois pode ocorrer de arquivos "objeto" compilarem, mas
+acontecer algun erro no processo de vinculação. ---------------------> TODO
 
 Mas o compilador apenas produz aquilo para sua arquitetura de CPU. Inclusive,
 você pode ter vários arquivos compilados
