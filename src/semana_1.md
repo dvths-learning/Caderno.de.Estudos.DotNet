@@ -9,9 +9,9 @@ próximos artigos), mais detalhes sobres essa linguagem serão abordados.
 
 [No artigo anterior](https://dev.to/dvths/me-tornando-um-desenvolvedor-net-0-1n15),
 abordei alguns conceitos introdutórios sobre a plataforma, seus componentes e
-funcionamento. Eu recomendo que você o leia para poder compreender melhor, se
-for o caso, alguns pontos que irei abordar mais para frente. Vou considerar que
-já conhecemos basicamente o que é e para que serve o .NET, e que já temos o SDK
+recursos. Eu recomendo que você o leia para poder compreender melhor, se for o
+caso, alguns pontos que irei abordar mais para frente. Vou considerar que já
+conhecemos basicamente o que é e para que serve o .NET, e que já temos o SDK
 (Software Development Kit) instalado (porque hoje tem código).
 
 Eu estou estudando em um Arch Linux. Isso é importante destacar por duas razões:
@@ -56,9 +56,18 @@ desenvolvimento, criação, execução e publicação de aplicações .NET e vem
 parte do conjunto de recursos do SDK.
 
 Como a maioria das CLIs, a do .NET consiste no driver -- um arquivo executável
--- opções e argumentos de comando. O driver (dotnet) tem basicamente duas
-responsabilidades: a) executar um aplicativo e b) fornece uma série de comandos
-para trabalhar com projetos .NET.
+-- opções e argumentos de comando. O driver (dotnet) tem basicamente as
+seguintes responsabilidades:
+
+**Executar programas:** abrange o fluxo de desenvolvimento, isto é, execução de
+testes, compilação do código e comandos de migração para atualizar projetos.
+
+**Gerenciar dependências:** abrange instalação, remoção, limpeza após a
+instalação de pacotes e atualização dos pacotes.
+
+**Criar e publicar pacotes:** abrange tarefas como criar um pacote compactado e
+efetuar um push do pacote para um registro, por exemplo (aos poucos veremos cada
+uma dessas coisas).
 
 ## Estrutura de comando
 
@@ -104,21 +113,7 @@ As opções são aquelas do comando invocado. Por exemplo:
 `dotnet publish --output /build_output`, é a opção que indica o caminho da saída
 do aplicativo a ser publicado e esse valor é passado para o comando publish.
 
-É importante ter em mente, principalmente se você não está habituado a usar a
-linha de comando, que os comandos do CLI .NET se dividem nas seguintes
-categorias:
-
-**Executar programas:** abrange o fluxo de desenvolvimento, isto é, execução de
-testes, compilação do código e comandos de migração para atualizar projetos.
-
-**Gerenciar dependências:** abrange instalação, remoção, limpeza após a
-instalação de pacotes e atualização dos pacotes.
-
-**Criar e publicar pacotes:** abrange tarefas como criar um pacote compactado e
-efetuar um push do pacote para um registro, por exemplo (aos poucos veremos cada
-uma dessas coisas).
-
-Uma lista dos comandos do CLI .NET e seus detalhes pode ser consultada
+Uma lista completa dos comandos do CLI .NET e seus detalhes pode ser consultada
 [aqui](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet?source=recommendations#dotnet-commands),
 mas lembre-se sempre da opção `--help`.
 
@@ -130,14 +125,13 @@ bibliotecas de classes, projetos de testes unitários, aplicativos ASP.NET, ect.
 Para listar esses modelos disponíveis, como vimos acima, executamos o comando
 `dotnet new` com a opção `-l` ou `--list`.
 
-Como estamos falando sobre aplicações de linha de comando, vamos criar um
-aplicativo de console. Para iniciar, você pode executar: `$ dotnet new console`.
-Contudo, você pode usar a opção `--help` tanto após `new` quanto após console
-para verificar as opções disponíveis para cada. Se fizer isso após o comando
-`new`, verá que existem duas opções (`-n` e `-o`) que já direcionam a saída
-argumento passado para um diretório específico (eu não consegui ver uma
-diferença prática entre essas opções apesar de estarem listados de forma
-distinta). Portanto, se executar:
+Para iniciar um aplicativo de console, você pode executar:
+`$ dotnet new console`. Contudo, você pode usar a opção `--help` tanto após
+`new` quanto após console para verificar as opções disponíveis para cada. Se
+fizer isso após o comando `new`, verá que existem duas opções (`-n` e `-o`) que
+já direcionam a saída argumento passado para um diretório específico (eu não
+consegui ver uma diferença prática entre essas opções apesar de estarem listados
+de forma distinta). Portanto, se executar:
 
 ```bash
 $ dotnet new console -o HelloWord
@@ -214,8 +208,8 @@ um espaço entre cada argumento. Esses argumentos são obtidos e armazenados em
 uma matriz de `strings` pelo método `GetCommandLineArgs()`, da classe
 `Environment`.
 
-Se você, por acaso, notou que o loop começou em 1 e não em 0, a resposta é que o
-primeiro elemento será o caminho para o executável do seu programa. Para não
+Você deve ter notado que o loop começou em 1 e não em 0, a razão para isso é que
+o primeiro elemento será o caminho para o executável do seu programa. Para não
 exibi-lo, começamos o loop da posição 1, o segundo elemento, que representa o
 primeiro argumento passado para o nosso comando Echo.
 
@@ -237,9 +231,9 @@ bin
 
 ```
 
-Este é o produto resultante da compilação ou os Assemblies. Aqui, temos o
-diretório `Debug` que armazena um conjunto de arquivos binários de saída do
-programa. Esses binários incluem:
+Este é o produto resultante da compilação. Aqui, temos o diretório `Debug` que
+armazena um conjunto de arquivos binários (assemblies) de saída do programa.
+Esses binários incluem:
 
 - o código do projeto em IL (Intermediate Language) -- vimos um pouco sobre isso
   no artigo anterior -- com extensão `.dll` (ou `exe`).
@@ -251,7 +245,7 @@ programa. Esses binários incluem:
   biblioteca, se fosse o caso).
 
 - um arquivo `.runtimeconfig.json`, que especifica o tempo de execução
-  compartilhado e sua versão em um aplicativo.
+  compartilhado e sua versão.
 
 - pode conter também outras bibliotecas das quais o projeto depende (por meio de
   referências de projeto ou referências de pacote do NuGet que ainda veremos).
@@ -274,102 +268,185 @@ nosso exemplo, será preciso fornecer os argumentos: `dotnet run Olá, mundo!`.
 
 Nesse ponto, você deve estar se perguntado sobre o diretório `obj`. Se você
 reparou, um diretório `Debug` também foi gerado lá e, entre outras coisas,
-também se encontram os assemblies de saída do programa. Se não reparou, repare e
-a sua próxima pergunta, então, será: Por que dois diretórios para a mesma coisa?
-E é aí que está: Não são necessariamente a mesma coisa. As dois diretórios
-armazenam o código em IL, mas seus propósitos de vida são distintos. E para
-deixar isso mais claro, precisamos entender o processo de compilação.
+também se encontram os assemblies de saída do programa. A próxima pergunta que
+pode vir a mente é: Por que dois diretórios para a mesma coisa?
+
+Na verdade, não são necessariamente a mesma coisa. As dois diretórios armazenam
+o código em IL, mas seus propósitos são distintos. E para deixar isso mais
+claro, precisamos entender o processo de compilação.
 
 Acontece que o uso coloquial da palavra "compilação" pode gerar certa confusão,
 pelo menos para mim que sou meio lento. Compilar não necessariamente é o mesmo
 que apenas gerar um arquivo executável. Em vez disso é um processo de várias
-estágios que, de maneira geral pode ser dividido em dois componentes:
+estágios que, de maneira geral, pode ser dividido em dois componentes:
 **compilação** e **linking**.
 
-![Compilação e Linker](./img/Compilador_Linker.jpg)
+![Compilação e Linker](./img/Compilação_Linking.jpg)
 
 **Compilação** se refere ao processamento do código-fonte e a criação de um
 arquivo "_objeto_" (por isso o diretório se chama "obj"), que são unidades
-compiladas individuais. Por exemplo, se você compilar (mas não vincular) três
-arquivos separados, você terá três arquivos objeto criados como saída, cada um
-com o nome `filename.dll`, por exemplo. Cada um desses arquivos contém uma
-tradução do seu código-fonte em IL -- mas você ainda não pode executá-los!
-Porque ainda é preciso transformá-los em executáveis que seu sistema operacional
-possa usar. É aí que entra o linking.
+compiladas individuais. Por exemplo, se você compilar (mas não vincular) dois
+arquivos separados, você terá dois arquivos objeto criados como saída, cada um
+com o nome `QualquerCoisa.dll` (ou .exe), por exemplo. Cada um desses arquivos
+contém uma tradução do seu código-fonte em IL -- mas você ainda não pode
+executá-los! Porque ainda é preciso transformá-los em executáveis que seu
+sistema operacional possa usar. É aí que entra o linking.
 
-Linking (vinculação) refere-se à criação de um único arquivo executável a partir
-de vários arquivos objeto. Isso significa que todos esses arquivos de código
-compilados são vinculados e compilados em uma unidade assembly que pode ser uma
-DLL ou EXE.
+**Linking** (vinculação) refere-se à criação de um único arquivo executável a
+partir de vários arquivos objeto. Isso significa que todos esses arquivos de
+código compilados são vinculados e compilados em uma unidade assembly que pode
+ser uma DLL ou EXE.
 
-Com isso em mente, pense no seguinte: se não houvessem etapas separadas,
-compilação e vinculação, caso seu programa possuísse diversos arquivos, a
-alteração de um exigiria a compilação (ou recompilação, no caso) de todos os
-outros. Com a compilação de duas fases, com unidades compiladas isoladas no
-diretório `/obj`, podemos ter mais controle sobres quais arquivos exatamente
-foram alterados, compilá-los separadamente e depois vinculá-los no processo de
-build. Inclusive isso tem um nome e se chama **compilação condicional**.
+Com isso em mente, pense no seguinte: se não houvessem etapas separadas, caso
+seu programa possuísse diversos arquivos, a alteração de um exigiria a
+compilação (ou recompilação, no caso) de todos os outros. Isso tornaria o
+processo bem lento dependendo do tamanho do projeto. Com a compilação de duas
+etapas, com unidades compiladas isoladas no diretório `/obj`, podemos ter mais
+controle sobres quais arquivos exatamente foram alterados, compilá-los
+separadamente e depois vinculá-los no processo de build. O nome que se dá para
+esse processo é **compilação condicional**.
 
-Saber disso importa, pois pode ocorrer de arquivos "objeto" compilarem, mas
-acontecer algun erro no processo de vinculação. ---------------------> TODO
+É no processo de compilação que também ocorre a análise sintática e léxica do
+código. Nesse ponto, se algo não estiver em conformidade com as especificações
+do CLS ou CTS (que vimos no artigo anterior), o pocesso é interrompido e um
+manipulador de erros integrado ao compilador te envia uma notificação apontando
+o local do erro. Por isso, tanto em `/obj`, quanto em `/bin` os arquivos de
+saída estão em um diretório chamado `Debug`, pois, essa compilação é feita de
+forma a facilitar a depuração. Ou seja, seu programa é compilado com informações
+de depuração e sem otimização. Porque otimização complica a depuração, afinal de
+contas, a relação entre o código-fonte e as instruções otimização geradas é bem
+mais complexa. Essa otimização, portanto, se faz necessária apenas quando
+queremos distribuir nossa plicação. Mas, falaremos sobre _release_ mais para
+frente.
 
-Mas o compilador apenas produz aquilo para sua arquitetura de CPU. Inclusive,
-você pode ter vários arquivos compilados
+As informações de depuração, que facilitam o debug são mapeadas naquele arquivo
+com extensão `.pdb`. PDB significa Program Database, ele é gerado pelo Linker e
+consiste em uma estrutura de dados empregada pelo compilador onde cada
+identificador no código-fonte do programa é conectado com informações sobre sua
+declaração, seu tipo, nível de escopo e, em alguns casos, a sua posição.
 
-_Ok, agora posso passar o meu programa para os meus amigos "echoarem" o que eles
-passam na linha de comando?_ Não. Porque o produto não está pronto para ser
-transferido para outro computador para execução. Se você leu o artigo anterior,
-deve recordar que os executáveis não são multiplataforma, mas específicos do
-sistema operacional em que foram desenvolvidos. Isto significa que o executável
-`Echo` criado aqui na minha máquina não rodará em um SO ou arquitetura de CPU
-diferente. Para criar uma versão do aplicativo que pode ser distribuída
-(implantada), você precisa publicá-lo (por exemplo, com o comando
-`dotnet publish`).
+Os estágios de análise e síntese da compilação empregam informações a essa
+estrutura (também chamada de tabela de símbolos) para verificar se os
+identificadores usados foram especificados, para validar se as expressões e
+atribuições são semanticamente precisas e para construir o IL de destino. Em
+outras palavras, o arquivo `.pdb` mapeia vários componentes e instruções no
+código-fonte para que o seu depurador possa usá-lo para localizar o arquivo de
+origem e o local no executável no qual ele deve interromper um processo de
+depuração.
 
-Antes de estudarmos o comando `publish` e ver como podemos tornar esse programa
-multiplataforma, precisamos refletir sobre a existência dos diretórios `obj` e
-`bin`. Por que precisamos delas para o processo de compilação?
+Com base no que acabamos de saber e no que estudamos no primeiro artigo, podemos
+fazer um desenho do processo de compilação que pode ser mais ou menos como este:
 
-Bom, creio que você já deve ter ouvido a expressão "vamos compilar e ver no que
-dá", ou alguém já perguntou: "o seu código está compilando?". **Compilação**
+![Processo de Compilação](./img/Processo_Compilação.jpg)
 
-------> TODO Program.cs Esse arquivo representa o ponto de partida do projeto.
-HelloWorld.csproj O arquivo com extensão .csproj representa a base para
-configuração do projeto. Ele interpreta todas as dependências do projeto, além
-de informações de configuração como requisitos da plataforma, controle de
-versão, definições para configuração de servidor e muito mais. Aqui ele tem o
-nome “HelloWorld”, mas ele terá o nome do projeto criado. Diretório obj: Este
-diretório é criado quando para receber as dependências. Quando um modelo é
-criado, ele inclui algumas dependências padrão para sua funcionalidade. Note a
-descrição na saída do comando de criação do projeto HelloWorld. Perceba que o
-comando dotnet restore foi executado implicitamente. Este comando restaura as
-dependências e as ferramentas de um projeto. Os registros e configurações dessas
-dependências ficam armazenadas no diretório obj , que, também, pode ser chamado
-de repositório de dependências. O que é uma dependência e como administrá-las? O
-ecossistema .NET usa muito a palavra dependência. Uma dependência é uma
-biblioteca de terceiros, ou seja, um conjunto de código reutilizável que realiza
-alguma funcionalidade dentro do contexto em que o aplicativo está inserido. Em
-outras palavras, é um código desenvolvido por outras pessoas que funciona para
+Entendendo basicamente o processo de compilação e build, podemos nos voltar para
+os outros dois arquivos: o de extensão`.cs` e `.csproj`.
+
+---
+
+Você pode ter notado que ao criar o modelo HelloWord a única linha de código era
+`Console.WriteLine("Hello, World);`. Mas que o código da nossa implementação de
+Echo tem uma estrutura diferente, com algumas coisas a mais.
+
+Se olharmos apenas a estrutura do progrma Echo, em Program.cs, veremos:
+
+```c
+
+namespace Echo;
+
+class Program
+{
+    public static void Main()
+    {
+        // code
+    }
+}
+
+```
+
+Como vimos na seção anterior, um programa C# consiste em uma ou mais unidades de
+compilação, isto é, geralmente, seu programa irá possuir um ou vários arquivos
+que serão compilados cada um em seu próprio arquivo objeto. Certamente, esses
+dependem uns dos outros para o programa rodar e, além disso, muito
+provavelmente, seu programa também dependerá de código de terceiros através de
+bibliotecas que possuem suas próprias funcionalidades e que também geram suas
+próprias unidades de compilação. Como organizar isso e evitar ambiguidade? Como
+garantir que uma classe ou método não conflite com outra classe ou método que
+possui o mesmo nome, por exemplo? É por isso que existem os _namespaces_.
+
+A palavra-chave `namespace` é usada para declarar um escopo que contém um
+conjunto de _códigos_ que se relacionam entre si. Isso mantém a organização
+lógica do projeto e evita erros de compilação. Usar namespaces é uma boa prática
+e em C# é intensamente usado para duas coisas principalmente:
+
+1. Organização das inúmeras classes;
+
+2. Para controlar o escopo dos nomes de classe e de método em projetos de
+   maiores.
+
+Conforme evoluirmos nos exemplos práticos ficará mais claro. Por enquanto esse
+conceito é suficiente.
+
+Agora pensemos no seguinte: Como o Runtime sabe por onde começar a executar o
+programa?
+
+A resposta está no método `Main()`. Este é o primeiro método invocado quando seu
+projeto é executado. Isso significa que um programa deve ter apenas um método
+`Main` também chamado de _Entry Point_ do programa. No entanto, é até possível
+que uma aplicação tenha mais de um, só que antes de executá-lo, será necessário
+informar o compilador por qual começar. Talvez vejamos isso na prática em um
+outro artigo.
+
+Você pode usar um namespace para organizar elementos de código e criar tipos
+globalmente exclusivos.
+
+O arquivo com extensão .csproj representa a base para configuração do projeto.
+Ele interpreta todas as dependências do projeto, além de informações de
+configuração como requisitos da plataforma, controle de versão, definições para
+configuração de servidor e muito mais. Para quem programa em NodeJs, podemos
+dizer que é algo semelhante ao `pakage.json`, ou `Cargo.toml`, para os
+programadores Rust.
+
+Até aqui eu citei algumas vezes a palavra dependência sem definir exatamente o
+que é uma. A seguir, vamos estudar mais a fundo como podemos usá-las.
+
+---
+
+Que é uma dependência e como administrá-las?
+
+Uma dependência é um conjunto de código reutilizável que realiza alguma
+funcionalidade dentro do contexto em que o aplicativo está inserido. Em outras
+palavras, é um código desenvolvido por você ou outras pessoas que funciona para
 um determinado contexto e, cujo qual o seu aplicativo depende. O .NET tem muitas
 bibliotecas principais que cuidam de praticamente tudo, desde gerenciamento de
-arquivos até HTTP e compactação de arquivos. E, esses pacotes (ou bibliotecas,
-ou dependências) são gerenciados pelo NuGet, que define como os pacotes .NET são
-criados, hospedados e consumidos e fornece as ferramentas para cada uma dessas
-funções. Bibliotecas, no geral, nos ajudam a obter um código melhor, mais
-conciso, o que muitas vezes nos poupa tempo e facilita a manutenção do programa.
-Contudo, é preciso levar em consideração o tamanho da biblioteca e a quantidade
-delas. O número de dependências pode gerar um grande volume, o que pode ser um
-ponto de preocupação durante o desenvolvimento caso você tenha recursos
-limitados de hardware, por exemplo. Também é preciso verificar se a licença
-concedida à biblioteca abrange o uso pretendido, seja comercial, pessoal ou
-acadêmico. E, por fim, mas não menos importante, se a manutenção da biblioteca
-está ativa. Existem bibliotecas preteridas ou que não são atualizadas há muito
-tempo. Antes de usarmos a primeira biblioteca de terceiros, vamos ver um exemplo
-de uso de uma das bibliotecas padrão (standard ou bibliotecas de classes) do
-.NET: System.IO.File . Vamos fugir um pouco do padrão e gerar uma mensagem
-“Hello World!” de uma maneira um pouco diferente. Dentro do diretório do projeto
-HelloWorld, abra o arquivo Program.cs no seu editor favorito. Digite ou copie e
-cole o código a seguir: using System; using System.IO;
+arquivos até HTTP e compactação de arquivos. Também existem pacotes (ou
+bibliotecas, ou dependências) que tratam de casos ainda mais específico e que
+são gerenciados pelo NuGet, o gerenciador de pacotes do .NET.
+
+O NuGet define como os pacotes .NET são criados, hospedados, consumidos e
+fornece as ferramentas para cada uma dessas funções. Bibliotecas, no geral, nos
+ajudam a obter um código melhor, mais conciso, o que muitas vezes nos poupa
+tempo e facilita a manutenção do programa. Contudo, é preciso levar em
+consideração o tamanho e a quantidade de biblioteca usadas, pois o número de
+dependências pode gerar um grande volume, o que pode ser um ponto de preocupação
+durante o desenvolvimento caso você tenha recursos limitados de hardware, por
+exemplo.
+
+Também é preciso verificar se a licença concedida à biblioteca abrange o uso
+pretendido, seja comercial, pessoal ou acadêmico. E, por fim, mas não menos
+importante, se a manutenção da biblioteca está ativa. Existem bibliotecas
+preteridas ou que não são atualizadas há muito tempo. Antes de usarmos a
+primeira biblioteca de terceiros, vamos ver um exemplo de uso de uma das
+bibliotecas padrão do .NET: `System.IO.File`.
+
+
+-------->>>> TODO
+
+
+Vamos fugir um pouco do padrão e gerar uma mensagem “Hello World!” de uma
+maneira um pouco diferente. Dentro do diretório do projeto HelloWorld, abra o
+arquivo Program.cs no seu editor favorito. Digite ou copie e cole o código a
+seguir: using System; using System.IO;
 
 class HelloWorld { static void Main() { string path = @"./message.txt"; if
 (!File.Exists(path)) { // Crie um arquivo e grave nele. using (StreamWriter
