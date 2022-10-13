@@ -4,8 +4,9 @@
 
 Neste segundo artigo, minha intenção é explorar os recursos iniciais de
 desenvolvimento .NET com a linguagem C#, uma linguagem moderna, orientada a
-objetos e fortemente tipada. Nos próximos artigos, mais detalhes sobre esses
-conceitos serão abordados.
+objetos e fortemente tipada. Se você ainda não está completamente familiarizado
+com esta linguagem, não se preocupe, iremos nos aprofundar nos estudos cada vez
+mais.
 
 [No artigo anterior](https://dev.to/dvths/me-tornando-um-desenvolvedor-net-0-1n15),
 abordei alguns conceitos introdutórios sobre a plataforma, seus componentes e
@@ -14,21 +15,22 @@ caso, alguns pontos que irei abordar mais para frente. Vou considerar que já
 conhecemos basicamente o que é e para que serve o .NET, e que já temos o SDK
 (Software Development Kit) instalado.
 
-Eu estou estudando em uma distro linux, Arch Linux. Isso é importante destacar
-por duas razões: Primeiro: porque o IDE (Itegrated Development Environment)
-Visual Studio, indicado para desenvolvimento .NET, não tem suporte para Linux.
-Apesar de um IDE possuir diversos recursos que facilitam o desenvolvimento, o
-Visual Studio Code dá conta do recado neste momento de aprendizado.
-Particularmente, eu uso Neovim 0.7 com
+Eu estudo em um Arch Linux. Isso é importante destacar por duas razões:
+Primeiro: porque o IDE (Integrated Development Environment) Visual Studio,
+indicado para desenvolvimento .NET, não tem suporte para Linux. Apesar de um IDE
+possuir diversos recursos que facilitam o desenvolvimento, o Visual Studio Code
+dá conta do recado neste momento de aprendizado. Particularmente, eu uso Neovim
+0.7 com
 [Language Server Protocol](https://docs.microsoft.com/en-us/visualstudio/extensibility/language-server-protocol?view=vs-2022)
 configurado. Segundo: eu começarei estudando a CLI (Command Line Interface) do
 dotnet, algo que um usuário do IDE usará poucas vezes no dia a dia. Portanto,
-alguns podem considerar irrelevante parte desse conteúdo.
+alguns podem considerar irrelevante parte desse conteúdo e podem pular para o
+que achar mais relevante.
 
-Por fim, esse artigo estudaremos os seguintes assuntos:
+## Tópicos
 
 - [Visão geral da CLI (Command Line Interface)](#visão-geral-da-cli)
-- [Estrutura de comandos](#estrutura-de-comando)
+- [Estrutura de comandos da CLI](#estrutura-de-comando)
 - [Estudando um aplicativo de console](#estudando-um-aplicativo-de-console)
 - [Fluxo de compilação](#fluxo-de-compilação)
 - [Namespaces](#namespaces)
@@ -44,9 +46,9 @@ A Interface de Linha de Comando do .NET é uma ferramenta multiplataforma para
 desenvolvimento, criação, execução e publicação de aplicações .NET e vem como
 parte do conjunto de recursos do SDK.
 
-Como a maioria das CLIs, a do .NET consiste no driver -- um arquivo executável
--- opções e argumentos de comando. O driver (dotnet) tem basicamente as
-seguintes responsabilidades:
+Como a maioria das CLIs, a do .NET consiste no driver – um arquivo executável –
+opções e argumentos de comando. O driver (dotnet) tem basicamente as seguintes
+responsabilidades:
 
 **Executar programas:** abrange o fluxo de desenvolvimento, isto é, execução de
 testes, compilação do código e comandos de migração para atualizar projetos.
@@ -55,10 +57,10 @@ testes, compilação do código e comandos de migração para atualizar projetos
 instalação de pacotes e atualização dos pacotes.
 
 **Criar e publicar pacotes:** abrange tarefas como criar um pacote compactado e
-efetuar um _push_ do pacote para um registro, por exemplo (aos poucos veremos
-cada uma dessas coisas).
+efetuar um push do pacote para um registro, por exemplo (aos poucos veremos cada
+uma dessas coisas).
 
-[Voltar ao topo](#introdução)
+[Voltar aos tópicos](#tópicos)
 
 ---
 
@@ -107,11 +109,11 @@ As opções são aquelas do comando invocado. Por exemplo:
 `dotnet publish --output /build_output`, é a opção que indica o caminho da saída
 do aplicativo a ser publicado e esse valor é passado para o comando publish.
 
-Uma lista completa dos comandos do CLI .NET e seus detalhes pode ser consultada
+Uma lista completa dos comandos do CLI .NET e seus detalhes pode ser consultados
 [aqui](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet?source=recommendations#dotnet-commands),
 mas lembre-se sempre da opção `--help`.
 
-[Voltar ao topo](#introdução)
+[Voltar aos tópicos](#tópicos)
 
 ---
 
@@ -119,15 +121,15 @@ mas lembre-se sempre da opção `--help`.
 
 Antes de iniciar um projeto, é importante saber que, ao instalar o SDK do .NET,
 recebemos dezenas de modelos pré preparados como aplicativos de console,
-bibliotecas de classes, projetos de testes unitários, aplicativos ASP.NET, ect.
+bibliotecas de classes, projetos de testes unitários, aplicativos ASP.NET, etc.
 Para listar esses modelos disponíveis, como vimos acima, executamos o comando
 `dotnet new` com a opção `-l` ou `--list`.
 
 Para iniciar um aplicativo de console, você pode executar:
-`$ dotnet new console`. Contudo, você pode usar a opção `--help` tanto após
-`new` quanto após `console` para verificar as opções disponíveis para cada. Se
-fizer isso após o comando `new`, verá que existem duas opções (`-n` e `-o`)
-ambas direcionam a saída gerada em um diretório nomeado por você. Portanto, se
+`$ dotnet new console.` Contudo, você pode usar a opção `--help` tanto após
+`new` quanto após console para verificar as opções disponíveis para cada. Se
+fizer isso após o comando `new`, verá que existem duas opções (-n e -o) ambas
+direcionam a saída gerada em um diretório nomeado por você. Portanto, se
 executar:
 
 ```bash
@@ -165,10 +167,8 @@ A maioria dos programas processa alguma entrada para produzir uma saída;
 basicamente essa é a definição de computação. Um programa obtêm dados de entrada
 de maneiras diversas, mas, com frequência, a entrada vem de uma fonte externa:
 um arquivo, uma conexão de rede, os dados da saída de outro programa ou de um
-usuário em um teclado.
-
-No arquivo `Program.cs`, você pode apagar o que estiver escrito e colar o
-seguinte código:
+usuário em um teclado. No arquivo `Program.cs`, você pode apagar o que estiver
+escrito e colar o seguinte código:
 
 ```csharp
 namespace HelloWorld;
@@ -197,18 +197,18 @@ class Program
 }
 ```
 
-Não precisamos nos preocupar tanto com a sintaxe do C#, nesse momento.
-Entretanto, o que este código faz criar um arquivo no diretório atual chamado
-`message.txt` e gravar nele a mensagem “Olá, Mundo!”, depois, enquanto existirem
-bytes para serem lidos, ele imprime no console o conteúdo desse arquivo. Quando
-isso se torna falso, o programa encerra.
+Não precisamos nos preocupar com a sintaxe do C#, nesse momento. Entretanto, o
+que este código faz é criar um arquivo no diretório atual chamado message.txt e
+gravar nele a mensagem “Olá, Mundo!”, depois, enquanto existirem bytes para
+serem lidos, ele imprime no console o conteúdo desse arquivo. Quando isso se
+torna falso, o programa encerra.
 
-Muita coisa pode ser dita a respeito desse código. Por exemplo, no primeiro
-artigo conhecemos os conceito de código gerenciado e não gerenciado e como o
-.NET trabalha com esses conceitos. `File`, aqui, é um exemplo de tipo gerenciado
+Muita coisa pode ser dita a respeito deste código. Por exemplo, no primeiro
+artigo conhecemos os conceitos de código gerenciado e não gerenciado e como o
+.NET trabalha com esses conceitos. File, aqui, é um exemplo de tipo gerenciado
 que acessa recursos não gerenciados pelo CLR (no caso, cria um arquivo e o
-acessa no contexto do dispositivo). Note que o arquivo `.txt` foi criado na
-pasta atual.
+acessa no contexto do dispositivo). Note que o arquivo .txt foi criado na pasta
+atual.
 
 ```bash
 $ tree -L 1
@@ -226,16 +226,15 @@ classes que os encapsula.
 
 `File`, `StreamWriter` e `StreamReader`, são tipos que lidam com fluxos de dados
 permitindo leitura e gravação em arquivos definidos na biblioteca `IO`
-(Input/Output) no namespace `System.IO` que fornece suporte básico a arquivos e
-diretórios do sistema operacional. O `Console.WriteLine()` também é um tipo
-definido no namespace `System`, ou seja, `System.Console.WriteLine`. Mas, não se
-preocupe pois, na próxima seção, veremos mais sobre namespaces.
+(Input/Output) no **namespace** `System.IO` que fornece suporte básico a
+arquivos e diretórios do sistema operacional. O `Console.WriteLine()` também é
+um tipo definido no namespace System, ou seja, `System.Console.WriteLine`. Mas,
+não se preocupe pois, na próxima seção, veremos mais sobre namespaces.
 
 Se você estiver se perguntando o motivo de não ver nada relacionado a declaração
-de bibliotecas  
-no código, eu te digo que nem sempre foi assim. Antes da versão 10 do C#, era
-necessário declarar namespaces individuais usando a diretiva `using` no topo de
-cada arquivo, por exemplo:
+de bibliotecas no código, eu te digo que nem sempre foi assim. Antes da versão
+10 do C#, era necessário declarar namespaces individuais usando a diretiva
+`using` no topo de cada arquivo, por exemplo:
 
 ```c
 using System;
@@ -254,13 +253,13 @@ que, entre outros detalhes, permitem ao compilador considerar certos namespaces
 para todo o projeto. Isso quer dizer que o SDK importa implicitamente os
 seguintes namespaces:
 
-- System
-- System.Collections.Generic
-- System.IO
-- System.Linq
-- System.Net.Http
-- System.Threading
-- System.Threading.Tasks
+- [System](https://learn.microsoft.com/en-us/dotnet/api/system?view=net-7.0)
+- [System.Collections.Generic](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic?view=net-7.0)
+- [System.IO](https://learn.microsoft.com/en-us/dotnet/api/system.io?view=net-7.0)
+- [System.Linq](https://learn.microsoft.com/en-us/dotnet/api/system.linq?view=net-7.0)
+- [System.Net.Http](https://learn.microsoft.com/en-us/dotnet/api/system.net.http?view=net-7.0)
+- [System.Threading](https://learn.microsoft.com/en-us/dotnet/api/system.threading?view=net-7.0)
+- [System.Threading.Tasks](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks?view=net-7.0)
 
 Contudo, a diretiva `using`, que veremos mais para frente, ainda é necessária
 para casos que fogem desse padrão.
@@ -284,11 +283,10 @@ bin
 ```
 
 Este é o produto resultante da construção do aplicativo. Aqui, temos o diretório
-`Debug` que armazena um conjunto de arquivos binários, ou: Os **assemblies** de
-saída do programa. Esse diretório inclui:
-
-- o código do projeto em IL (Intermediate Language) -- vimos um pouco sobre isso
-  no artigo anterior -- com extensão `.dll`.
+**Debug** que armazena um conjunto de arquivos binários, ou: **Os assemblies de
+saída do programa**. Esse diretório inclui: o código do projeto em **IL**
+(Intermediate Language) – vimos um pouco sobre isso no artigo anterior – com
+extensão `.dll`.
 
 - arquivos de símbolo de depuração, com uma extensão `.pdb` (veremos logo,
   logo).
@@ -300,7 +298,7 @@ saída do programa. Esse diretório inclui:
   compartilhado e sua versão.
 
 - pode conter também outras bibliotecas das quais o projeto depende (por meio de
-  referências de projeto ou referências de pacote do NuGet que veremos no
+  referências de projeto ou referências de pacote do **NuGet** que veremos no
   próximo artigo da série).
 
 Vamos ver esse programa funcionando:
@@ -312,57 +310,55 @@ Olá, Mundo
 
 ```
 
-Nesse ponto, você deve estar se perguntado sobre o diretório `obj`. Se você
-reparou, um diretório `Debug` também foi gerado lá e, entre outras coisas,
-também se encontram os assemblies de saída do programa. A próxima pergunta que
-pode surgir é: Por que dois diretórios para a mesma coisa?
+Nesse ponto, você deve estar se perguntando sobre o diretório `obj`. Se você
+reparou, um diretório **Debug** também foi gerado lá e, entre outras coisas,
+também se encontram os **assemblies** de saída do programa. A próxima pergunta
+que pode surgir é: Por que dois diretórios para a mesma coisa?
 
-Na verdade, não são necessariamente a mesma coisa. As dois diretórios armazenam
+Na verdade, não são necessariamente a mesma coisa. Os dois diretórios armazenam
 o código em IL, mas seus propósitos são distintos. E para deixar isso mais
 claro, precisamos entender o processo de compilação.
 
-[Voltar ao topo](#introdução)
+[Voltar aos tópicos](#tópicos)
 
 ---
 
 # Fluxo de compilação
 
-Acontece que o uso coloquial da palavra "compilação" pode gerar certa confusão,
+Acontece que o uso coloquial da palavra “compilação” pode gerar certa confusão,
 pelo menos para mim que sou meio lento. Muitas vezes, nos referimos a compilação
-quando, na verdade, estamos nos referindo a build (construção). Compilação não
-necessariamente é o mesmo que apenas gerar um arquivo executável. Em vez disso é
-um processo de várias estágios que, de maneira geral, pode ser dividido em dois
-componentes: **compilação** e **linking**.
+quando, na verdade, estamos nos referindo a **build** (construção). Compilação
+não necessariamente é o mesmo que apenas gerar um arquivo executável. Em vez
+disso, é um processo de vários estágios que, de maneira geral, pode ser dividido
+em dois componentes: **compilação** e **linking**.
 
 ![Compilação e Linker](./img/Compilação_Linking.jpg)
 
 **Compilação** se refere ao processamento do código-fonte e a criação de
-arquivos "_objeto_", que são unidades compiladas individuais. É no processo de
+arquivos “objeto”, que são unidades compiladas individuais. É no processo de
 compilação que também ocorre a análise sintática e léxica do código. Nesse
-ponto, se algo não estiver em conformidade com as especificações do CLS ou CTS
-(que vimos no artigo anterior), o processo é interrompido e um manipulador de
-erros integrado ao compilador te envia uma notificação apontando o local do
-erro.
+ponto, se algo não estiver em conformidade com as especificações do **CLS** ou
+**CTS** (que vimos no artigo anterior), o processo é interrompido e um
+manipulador de erros integrado ao compilador envia uma notificação apontando o
+local do erro. Cada um desses arquivos objeto contém uma tradução do seu
+código-fonte em IL e são armazenados no diretório **obj** – mas você não pode
+executá-los! Porque ainda é preciso transformá-los em executáveis que seu
+sistema operacional possa usar. É aí que entra o **Linker**.
 
-Cada um desses arquivos objeto contém uma tradução do seu código-fonte em IL e
-são armazenados no diretório `obj` -- mas você não pode executá-los! Porque
-ainda é preciso transformá-los em executáveis que seu sistema operacional possa
-usar. É aí que entra o Linker.
-
-**Linking** (vinculação) refere-se à criação de um único arquivo executável a
+**Linking** (ou vinculação) refere-se à criação de um único arquivo executável a
 partir de vários arquivos objeto. Isso significa que todos esses arquivos de
-código são compilados em uma unidade assembly armazenada em `/bin` e, que,
-posteriormente, em tempo de execução, será **interpretado** pelo compilador JIT,
-fornecido pelo CLR, da melhor maneira para se comunicar com as APIs do sistema
-operacional, como estudamos no artigo anterior.
+código são compilados em uma unidade **assembly** armazenada em `/bin` e, que,
+posteriormente, em tempo de execução, será **interpretado** pelo compilador
+**JIT**, fornecido pelo **CLR**, da melhor maneira para se comunicar com as APIs
+do sistema operacional, como estudamos no artigo anterior.
 
 Por isso, esses arquivos de saída são divididos em `/obj` e `/bin`, mas também
-possuem um diretório chamado `Debug`, pois, esse processo de compilação é feito
-de forma a facilitar a depuração.
+possuem um diretório chamado **Debug**, pois, esse processo de compilação é
+feito de forma a facilitar a depuração.
 
-As informações de depuração, que facilitam o debug são mapeadas naquele arquivo
-com extensão `.pdb`. PDB significa Program Database, ele é gerado pelo Linker e
-consiste em uma estrutura de dados empregada pelo compilador onde cada
+As informações de depuração, que facilitam o debug, são mapeadas naquele arquivo
+com extensão `.pdb`. **PDB** significa **Program Database**, ele é gerado pelo
+Linker e consiste em uma estrutura de dados empregada pelo compilador onde cada
 identificador no código-fonte do programa é conectado com informações sobre sua
 declaração, seu tipo, nível de escopo e, em alguns casos, a sua posição.
 
@@ -373,14 +369,12 @@ atribuições são semanticamente precisas e para construir o IL de destino. Em
 outras palavras, o arquivo `.pdb` mapeia vários componentes e instruções no
 código-fonte para que o seu depurador possa usá-lo para localizar o arquivo de
 origem e o local do executável no qual ele deve interromper um processo de
-depuração.
-
-Sendo assim, seu programa é compilado com informações de depuração junto com os
-assemblies e sem otimização. Porque otimização complica a depuração, afinal de
-contas, a relação entre o código-fonte e as instruções de otimização geradas são
-bem mais complexa. Essa otimização, portanto, se faz necessária apenas quando
-queremos distribuir nossa aplicação, um processo chamado _release_. Mas,
-estudaremos isso em outro momento.
+depuração. Sendo assim, seu programa é compilado com informações de depuração
+junto com os **assemblies** e sem otimização. Porque a otimização complica a
+depuração, afinal de contas, a relação entre o código-fonte e as instruções de
+otimização geradas são bem mais complexas. Essa otimização, portanto, se faz
+necessária apenas quando queremos distribuir nossa aplicação, um processo
+chamado _release_. Mas, estudaremos isso em outro momento.
 
 Com base no que acabamos de saber e no que estudamos no primeiro artigo, podemos
 fazer um desenho do processo de compilação que pode ser mais ou menos como este:
@@ -390,19 +384,19 @@ fazer um desenho do processo de compilação que pode ser mais ou menos como est
 Entendendo basicamente o processo de compilação e build, podemos entender melhor
 os namespaces.
 
-[Voltar ao topo](#introdução)
+[Voltar ao tópicos](#tópicos)
 
 ---
 
 # Namespaces
 
-Você pode ter notado que ao criar o modelo HelloWorld a única linha de código
-era `Console.WriteLine("Hello, World");`. Mas que o código da nossa
-implementação tem uma estrutura diferente, com algumas coisas a mais.
+Você pode ter notado que ao criar o modelo `HelloWorld` a única linha de código
+era `Console.WriteLine("Hello, World");`. Mas o código da nossa implementação
+tem uma estrutura diferente, com algumas coisas a mais.
 
-Se olharmos apenas a estrutura do programa, em Program.cs, veremos:
+Se olharmos apenas a estrutura do programa, em `Program.cs`, veremos:
 
-```c
+```csharp
 
 namespace HelloWorld;
 
@@ -417,28 +411,27 @@ class Program
 ```
 
 Como vimos na seção anterior, um programa C# consiste em uma ou mais unidades de
-compilação, isto é, geralmente, seu programa irá possuir um ou vários arquivos
-que serão compilados cada um em seu próprio arquivo objeto. Certamente, esses
-dependem uns dos outros para o programa rodar e, além disso, muito
-provavelmente, seu programa também dependerá de código de terceiros através de
-bibliotecas que possuem suas próprias funcionalidades e que também geram suas
-próprias unidades de compilação. Como organizar isso e evitar ambiguidade? Como
-garantir que uma classe ou método não conflite com outra classe ou método que
-possui o mesmo nome, por exemplo? É por isso que existem os _namespaces_.
+compilação, Certamente, eles dependerão uns dos outros para que o seu programa
+rode e, além disso, seu programa também dependerá de código de de bibliotecas
+que possuem suas próprias funcionalidades e que também geram suas próprias
+unidades de compilação. Como organizar isso e evitar ambiguidade? Como garantir
+que uma classe ou método não conflite com outra classe ou método que possui o
+mesmo nome, por exemplo? É por isso que existem os **namespaces**.
 
-Um namespace é um agrupamento de tipos semanticamente relacionados contidos em
-um assembly ou, possivelmente, espalhados em vários assemblies relacionados. Por
-exemplo, o namespace `System.IO`, que usamos em nosso exemplo, contém tipos
-relacionados a E/S de arquivo, o namespace System.Console define tipos básicos
-que lidam com fluxos de E/S e erro padrão para aplicativos de console e assim
-por diante.
+Um **namespace** é um agrupamento de tipos semanticamente relacionados contidos
+em um **assembly** ou, possivelmente, espalhados em vários **assemblies
+relacionados**. Por exemplo, o namespace `System.IO`, que usamos em nosso
+exemplo, contém tipos relacionados a E/S de arquivo, o namespace
+`System.Console` define tipos básicos que lidam com fluxos de E/S e erro padrão
+para aplicativos de console e assim por diante.
 
 É importante ressaltar que um único assembly pode conter _n_ namespaces, cada um
 dos quais pode conter _n_ tipos. A principal diferença entre essa abordagem e
-uma biblioteca de uma linguagem específica é que para qualquer uma das linguagem
-de destino suportada pelo .NET, o tempo de execução usa os mesmos namespaces e
-os mesmos tipos, como vimos no artigo anterior quando falamos sobre o CTS e BCL.
-Contudo, para ficar mais claro, vamos ver um Hello World em C# e VB:
+uma biblioteca de uma linguagem específica, como _nodeJs_, por exemplo, é que
+para qualquer uma das linguagem de destino suportada pelo .NET, o tempo de
+execução usa os mesmos namespaces e os mesmos tipos, como vimos no artigo
+anterior quando falamos sobre o CTS e BCL. Contudo, para ficar mais claro, vamos
+ver um Hello World em C# e VB:
 
 ```
 //  C#.
@@ -461,12 +454,12 @@ Public Module MyApp
 End Module
 ```
 
-Você pode observar que cada idioma está usando a classe `Console` definida no
-namespace `System`. Além das variações sintáticas óbvias, esses códigos são
-muito parecidos, tanto física quanto logicamente.
+Você pode observar que cada idioma está usando a classe Console definida no
+namespace System. Além das variações sintáticas óbvias, esses códigos são muito
+parecidos, tanto física quanto logicamente.
 
-Para resumir: A palavra-chave `namespace` é usada para declarar um escopo que
-contém um conjunto de _códigos_ que se relacionam semanticamente entre si. Isso
+Para resumir: A palavra-chave namespace é usada para declarar um escopo que
+contém um conjunto de códigos que se relacionam semanticamente entre si. Isso
 mantém a organização lógica do projeto e evita erros de compilação. Usar
 namespaces é uma boa prática e em C# é intensamente usado para duas coisas
 principalmente:
@@ -477,27 +470,27 @@ principalmente:
 
 Conforme evoluirmos nos exemplos práticos ficará ainda mais claro.
 
-Com uma noção maior do fluxo de compilação e de como as coisas funcionam por
-baixo dos panos quado trabalhamos com .NET. Chegou a vez de olharmos para o
-arquivo de projeto: aquele com extensão `.csproj`.
+Caminhando para o final do nosso estudo, chegou a vez de olharmos para o arquivo
+de projeto: aquele com extensão `.csproj`.
 
-[Voltar ao topo](#introdução)
+[Voltar ao tópicos](#tópicos)
 
 ---
 
 # Arquivos de projeto e Entry Point
 
-O arquivo `csproj` também é chamado na documentação de arquivo de projeto
-MSBuild e está no centro do processo de build e implantação de um software .NET.
+O arquivo `csproj` também é chamado na documentação de **arquivo de projeto
+MSBuild** e está no centro do processo de **build** e implantação de um software
+.NET.
 
-O MSBuild, ou Microsoft Build Engine, é o mecanismo que controla como a
+O **MSBuild**, ou **Microsoft Build Engine**, é o mecanismo que controla como a
 plataforma de compilação processa e compila um software. Tanto a CLI do .NET
 quanto a IDE Visual Studio, usam o MSBuild para criar os aplicativos incluindo
-um arquivo que reflete a _natureza_, digamos assim, do projeto: no caso do C#, o
-_.csproj_, mas um projeto do Visual Basic será _.vbproj_, um projeto de banco de
-dados, _.dbproj_.
+um arquivo que reflete a _natureza_ do projeto, digamos assim. No caso do C#, o
+`.csproj`, mas um projeto do Visual Basic será `.vbproj`, um projeto de banco de
+dados, `.dbproj`.
 
-Se trata de um documento XML que contém todas as informações e instruções
+Trata-se de um documento **XML** que contém todas as informações e instruções
 necessárias para construção do projeto, como os requisitos da plataforma, as
 informações de controle de versão, as configurações do servidor Web ou do
 servidor de banco de dados e as tarefas que devem ser executadas.
@@ -507,37 +500,34 @@ msbuild, usando o esquema XML do MSBuild, para impor um controle sofisticado e
 refinado sobre como nossos projetos são criados e implantados. Contudo, um
 estudo mais aprofundado sobre isso ficará para um próximo artigo.
 
-O que precisamos compreender é que comando `dotnet build` usa esse mecanismo
-para compilar o projeto e dá suporte para compilações paralelas e incrementais.
-Isso é interessante para estudarmos mais detalhadamente o fluxo de compilação
-dos nossos projetos conforme eles se tornarem mais complexos. Em tempo, este
-conceito inicial é suficiente para entendermos porque e de onde vem o arquivo
-.csproj. Se você quiser se aprofundar mais, pode acessar os links para os
-conteúdos que estou estudando nas [referências](#referências) para esse artigo.
+O que precisamos compreender é que comando dotnet build usa esse mecanismo para
+compilar o projeto e dá suporte para compilações paralelas e incrementais. Isso
+é interessante para estudarmos mais detalhadamente o fluxo de compilação dos
+nossos projetos conforme eles se tornarem mais complexos.
 
-Por fim, mas não menos importante, a dúvida: Como o Runtime sabe por onde
-começar a executar o programa?
+Em tempo, este conceito inicial é suficiente para entendermos porque é de onde
+vem o arquivo `.csproj`. Se você quiser se aprofundar mais, pode acessar os
+links para os conteúdos usados como [referência](#referências) para esse artigo.
 
-A resposta objetiva está no método `Main()`. Este é o primeiro método invocado
-quando seu projeto é executado. Isso significa que um programa deve ter apenas
-um método `Main` -- também chamado de _Entry Point_ do programa. No entanto, é
-até possível que uma aplicação tenha mais de um, só que antes de executá-lo,
-será necessário informar o compilador por qual começar. Talvez vejamos isso na
-prática nos próximos artigos.
+**Por fim, mas não menos importante**, a dúvida: Como o Runtime sabe por onde
+começar a executar o programa? A resposta objetiva está no método `Main()`. Este
+é o primeiro método invocado quando seu projeto é executado. Ou seja, um
+programa deve ter apenas um método Main – também chamado de Entry Point do
+programa. No entanto, é até possível que uma aplicação tenha mais de um, só que
+antes de executá-lo, será necessário informar o compilador por qual começar.
+
+No próximo artigo vamos começar a praticar começando desenvolver exemplos com C#
+e .NET 6 e ver muito mais de todos esses conceitos na prática.
 
 ---
 
 ## Resumo
 
-Este artigo complementou muitos dos conceitos estudados no artigo anterior, como
-CRL, CTS, BCL. Tivemos o primeiro contato com a CLI do .NET, estudamos a
-estrutura dos seus comandos. Também analisamos a estrutura de arquivos de um
-projeto e pudemos compreender, além dos seus significados, como estes arquivos interagem
-uns com os outros. Entramos em detalhes do fluxo de compilação e também tivemos
-um primeiro contato com a linguagem C#.
+Este artigo complementou muitos dos conceitos estudados no artigo anterior, como CRL, CTS, BCL. Tivemos o primeiro contato com a CLI do .NET, estudamos a estrutura dos seus comandos. Também analisamos a estrutura de arquivos de um projeto e pudemos compreender, além dos seus significados, como estes arquivos interagem uns com os outros. Entramos em detalhes do fluxo de compilação e também tivemos um primeiro contato com a linguagem C#.
 
-Espero que este resumo te ajude de alguma forma. Não hesite em deixar seu
-feedback para melhorias ou correções.
+Espero que este resumo te ajude de alguma forma. Não hesite em deixar seu feedback para melhorias ou correções.
+
+Até a próxima.
 
 ---
 
