@@ -1,6 +1,22 @@
-# Me tornando um desenvolvedor .NET #0 
+# Artigo 1
 
-**No começo do mês de Agosto**, iniciei meus estudos do ecossistema .NET, o
+---
+
+- Visão geral
+  - [Introdução](./#introdução)
+  - [Histórico do .NET](./#histórico-do-.net)
+  - [Componentes do ecossistema .NET](./#componentes-do-ecossistema.net)
+  - [CLR - COMMON LANGUAGE RUNTIME](./#clr-common-language-runtime)
+  - [CLS - COMMON LANGUAGE SPECIFICATION](./#cls-common-language-specification)
+  - [CTS - COMMON TYPE SPECIFICATION](./#cts-common-type-specification)
+  - [BCL - BASE CLASS LIBRARY](./#base-class-library)
+  - [Processo de Execução Gerenciado](./#processo-de-execução-gerenciado)
+
+---
+
+## Introdução
+
+\_No começo do mês de Agosto\*\*, iniciei meus estudos do ecossistema .NET, o
 ambiente de desenvolvimento da Microsoft. Este e os próximos artigos representam
 meus esforços de aprendizado e a vontade de compartilhar conhecimento com quem
 também está começando.
@@ -12,7 +28,7 @@ tenha ficado claro o suficiente, por favor, não hesite em me procurar para que
 eu possa melhorar.
 
 Quero ressaltar que os conteúdos que serão publicados não possuem o objetivo de
-serem tutoriais, mas resumos dos meus estudos. Este _disclaimer_ se faz
+serem tutoriais, mas resumos dos meus estudos. Este disclaimer se faz
 necessário, pois é possível que eu pule etapas consideradas mais básicas por já
 ter consolidado o conhecimento ou por não estarem no escopo. Por outro lado,
 como se trata de algo novo para mim, alguns temas de base serão abordados.
@@ -20,34 +36,11 @@ como se trata de algo novo para mim, alguns temas de base serão abordados.
 Dito isso, gostaria de pedir, tanto para programadores iniciantes, como eu,
 quanto para aqueles com mais experiência, que se sintam a vontade par entrar em
 contato, tirar dúvidas, dar feedback ou contribuir para a melhoria do conteúdo.
-Só assim poderemos evoluir juntos.
+Só assim poderemos evoluir juntos.\_
 
 ---
 
-## Introdução
-
-Há muito material online sobre a estrutura do ambiente de desenvolvimento da
-Microsoft. Neste artigo irei abordar o que considero mais relevante para
-compreensão desse ecossistema raro. Uso a palavra “raro” porque realmente
-existem poucos frameworks no mercado que oferecem tantas ferramentas integradas
-para desenvolvimento de software.
-
-Tem me ajudado conhecer a plataforma mais afundo. Seus conceitos e funcionamento
-trazem um conhecimento rico que me esforço para resumir abordando os seguintes
-tópicos:
-
-- Visão geral
-  - Histórico do .NET - Importante para sabermos com o que estamos lidando.
-  - Componentes do ecossistema .NET
-  - CLR - COMMON LANGUAGE RUNTIME
-  - CLS - COMMON LANGUAGE SPECIFICATION
-  - CTS - COMMON TYPE SPECIFICATION
-  - BCL - BASE CLASS LIBRARY
-  - Processo de Execução Gerenciado
-
----
-
-## Visão Geral: Histórico do .NET
+## Histórico do .NET
 
 Como muitos sabem, .NET Framework foi criado na década de 1990, com o nome de
 NGWS (Next Generation Windows Services) para desenvolver aplicações da
@@ -108,7 +101,7 @@ componentes.
 
 ---
 
-## Componentes .NET
+## Componentes do ecossistema .NET
 
 Ok, somos novos no ramo. Talvez nem tudo fique claro logo de cara. Mas imagine
 comigo: A primeira suposição que fazemos é que um programa é escrito em uma
@@ -252,7 +245,7 @@ programadores do .NET Framework. O ADO.NET fornece um rico conjunto de
 componentes para a criação de aplicativos distribuídos de compartilhamento de
 dados.
 
-### BCL - BASE CLASS LIBRARY
+## BCL - BASE CLASS LIBRARY
 
 Por fim, mas não menos importante, a BCL. Uma coleção de métodos e funções que
 podem ser usados ​​para o propósito da aplicação. A estrutura .NET fornece um
@@ -264,7 +257,7 @@ as operações em nível de arquivo. Portanto, existe um método que pode ser us
 para ler o texto de um arquivo. Da mesma forma, existe um método para escrever
 texto em um arquivo.
 
-A maioria dos métodos é dividida nos namespaces System._ ou Microsoft._. (o
+A maioria dos métodos é dividida nos namespaces System.\_ ou Microsoft. (o
 asterisco significa apenas uma referência a todos os métodos que se enquadram no
 namespace System ou Microsoft).
 
@@ -349,22 +342,19 @@ publicar sobre o assunto.
 esses componentes, possui muitos outros recursos, por isso é útil categorizá-los
 da seguinte forma:
 
-1. **Recursos fundamentais** – Recursos que têm amplo impacto no design de
-   outros recursos. Esses incluem:
-1. Coleta de lixo
-1. Segurança de memória e segurança de tipo
-1. Suporte de alto nível para linguagens de programação.
-1. **Recursos secundários** – Recursos habilitados pelos recursos fundamentais
-   que podem não ser exigidos:
-1. Isolamento de programa com AppDomains
-1. Segurança do programa e sandboxing
-1. **Outros recursos** – recursos que todos os ambientes de tempo de execução
-   precisam, mas que não aproveitam os recursos fundamentais do CLR. Em vez
-   disso, eles são o resultado do desejo de criar um ambiente de programação
-   completo. Entre eles estão:
-1. Controle de versão
-1. Depuração/Perfil
-1. Interoperação
+**Recursos fundamentais** – Recursos que têm amplo impacto no design de outros
+recursos. Esses incluem: Coleta de lixo Segurança de memória e segurança de tipo
+Suporte de alto nível para linguagens de programação.
+
+**Recursos secundários** – Recursos habilitados pelos recursos fundamentais que
+podem não ser exigidos: Isolamento de programa com AppDomains Segurança do
+programa e sandboxing.
+
+**Outros recursos** – recursos que todos os ambientes de
+tempo de execução precisam, mas que não aproveitam os recursos fundamentais do
+CLR. Em vez disso, eles são o resultado do desejo de criar um ambiente de
+programação completo. Entre eles estão: Controle de versão Depuração/Perfil
+Interoperação
 
 Para os próximos artigos eu irei me aprofundar um pouco mais em alguns desses
 recursos. Por agora, podemos resumir o Runtime do .NET como uma especificação
