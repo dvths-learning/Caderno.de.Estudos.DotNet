@@ -1,6 +1,4 @@
-# Semana #0
-
-##
+# Me tornando um desenvolvedor .NET #0 
 
 **No começo do mês de Agosto**, iniciei meus estudos do ecossistema .NET, o
 ambiente de desenvolvimento da Microsoft. Este e os próximos artigos representam
